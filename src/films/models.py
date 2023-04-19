@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class FilmData(models.Model):
     name = models.CharField(max_length=200)
-    photo = models.ImageField(upload_to='photos/')
+    image = models.ImageField(upload_to='photos/')
     video = models.FileField(upload_to='videos/')
     
     def __str__(self) -> str:
