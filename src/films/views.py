@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic import ListView
 
 from .models import Film, FilmData, UserFilmRelation
 
@@ -42,5 +43,21 @@ def home(request):
         return render(request, 'films/home.html', data)
     
 
-def search(request):
-    pass
+# def search(request):
+#     if request.method == 'POST':
+#         searched = request.POST.get('search')
+#         print(searched)
+#         films = Film.objects.filter(name__icontains=searched)
+#         data = {
+#             'films': films
+#         }
+#         return render(request, 'films/home.html', data)
+    
+class Search(ListView):
+    template_name = 'films/home.html'
+    context_object_name = "films"
+    
+    def get_queryset(self):
+        return Film.objects.select_related('data').filter(name__icontains=self.request.GET.get("search"))
+    
+

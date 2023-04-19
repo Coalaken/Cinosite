@@ -19,9 +19,11 @@
                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
                           <form method="post">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-secondary" name="film-name" id="film-name" value="{{ film.name }}">
+
+                            <button type="submit" class="btn btn-sm btn-outline-secondary btn-warning" name="film-name" id="film-name" value="{{ film.name }}">
                               In bookmarks
                             </button>
+
                           </form>
                         </div>
                         <small class="text-body-secondary">{{ film.updated_at.date }}</small>
