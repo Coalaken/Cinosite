@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'debug_toolbar',
+    # 'django_celery_results',
     
     'films.apps.FilmsConfig',
     'users.apps.UsersConfig',
@@ -144,3 +145,6 @@ from django.urls import reverse_lazy
 
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = '/login'
+
+
+################## CELERY ##################

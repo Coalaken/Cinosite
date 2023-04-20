@@ -14,45 +14,24 @@ from .services import change_bookmarks
 def home(request):
     if request.method == 'POST':
         change_bookmarks(request, Film, UserFilmRelation)
-        films = Film.objects.select_related('added_by').all()
-        data = {
-            'films': films
-        }
-        return render(request, 'films/home.html', data)
-    else:
-        films = Film.objects.select_related('added_by').all()
-        data = {
-            'films': films
-        }
-        return render(request, 'films/home.html', data)
+
+    films = Film.objects.select_related('added_by').all()
+    data = {
+        'films': films
+    }
+    return render(request, 'films/home.html', data)
     
     
 @login_required(login_url="/login")
 def search(request):    
-    if request.method == 'GET':
-        films = Film.objects.select_related('added_by').\
-            filter(name__icontains=request.GET.get("search"))
-        
-        data = {
-            'films': films
-        }
-        return render(request, 'films/home.html', data)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         change_bookmarks(request, Film, UserFilmRelation)
-        films = Film.objects.select_related('added_by').\
-            filter(name__icontains=request.GET.get("search"))
-        data = {
-            'films': films
-        }
-        return render(request, 'films/home.html', data)
-    
-# class Search(ListView):
-#     template_name = 'films/home.html'
-#     context_object_name = "films"
-    
-#     def get_queryset(self):
-#         return Film.objects.select_related('added_by').\
-#             filter(name__icontains=self.request.GET.get("search"))
+    films = Film.objects.select_related('added_by').\
+        filter(name__icontains=request.GET.get("search"))
+    data = {
+        'films': films
+    }
+    return render(request, 'films/home.html', data)
     
 
 @login_required(login_url="/login")
@@ -74,6 +53,8 @@ def add_film(request):
         
 @login_required(login_url='/login') 
 def bookmarks(request):
+    if request.method == 'POST':
+        change_bookmarks(request, Film, UserFilmRelation)
     films = Film.objects.select_related('added_by').\
         filter(userfilmrelation__user=request.user, userfilmrelation__in_bookmarks=True)
     data = {
