@@ -3,13 +3,29 @@
 {% block content%}
 
     <main>
+      <!-- <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" style="height: 200px;">
+        <div class="carousel-inner">
+          {% for film in films%}
+          <div class="carousel-item active" >
+            <img src="{{ film.image.url }}" class="d-block w-100" alt="...">
+          </div>
+          {% endfor %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div> -->
         <div class="album py-5 bg-body-tertiary">
             <div class="container">
               <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-4  g-4">
               {% for film in films %}  
                 <div class="col">
                   <div class="card shadow-sm" style="background-image: url('{{ film.image.url }}'); background-size: no-repeat; background-position: center;
-                  background-size: cover; padding-top: 400px; min-width:190px; margin: 5px;">
+                  background-size: cover; padding-top: 300px; min-width:190px; margin: 5px;">
 
                     
                     <div class="card-body">
@@ -18,7 +34,11 @@
                       </div>
                       <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
-                          <button type="button" class="btn btn-sm btn-outline-secondary btn-light" style="margin-right: 1px;">View</button>
+                          <a href="{{ film.get_absolute_url }}">
+                            <button type="button" class="btn btn-sm btn-outline-secondary btn-light" style="margin-right: 1px;">
+                              View
+                            </button>
+                          </a>
                           <form method="post">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-outline-secondary btn-warning" name="film-name" id="film-name" value="{{ film.name }}">
