@@ -82,3 +82,10 @@ def add_film(request):
         return render(request, 'films/add_film.html', {'form': form})
         
         
+def bookmarks(request):
+    films = Film.objects.filter(userfilmrelation__user=request.user,
+                                userfilmrelation__in_bookmarks=True)
+    data = {
+        'films': films
+    }
+    return render(request, 'films/home.html', data)
