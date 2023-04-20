@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     
-    'films.apps.FilmsConfig'
+    'films.apps.FilmsConfig',
+    'users.apps.UsersConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATES_PACKS = 'bootstrap5'

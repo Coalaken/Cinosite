@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required, permission_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 
 from .models import Film, UserFilmRelation
 from .forms import FilmAddForm
 
 
+@login_required(login_url="/login")
 def home(request):
     if request.method == 'POST':
         film_name = request.POST.get("film-name")
@@ -31,22 +35,22 @@ def home(request):
                         relation.save()
         else:
             print("film name not exist")
-        films = Film.objects.select_related('data').prefetch_related('viewers').all()
+        films = Film.objects.select_related('added_by').prefetch_related('viewers').all()
         data = {
             'films': films
         }
         return render(request, 'films/home.html', data)
     else:
-        films = Film.objects.select_related('data').prefetch_related('viewers').all()
+        films = Film.objects.select_related('added_by').prefetch_related('viewers').all()
         data = {
             'films': films
         }
         return render(request, 'films/home.html', data)
     
-
+@login_required(login_url="/login")
 def search(request):    
     if request.method == 'GET':
-        films = Film.objects.select_related('data').filter(name__icontains=request.GET.get("search"))
+        films = Film.objects.select_related('added_by').filter(name__icontains=request.GET.get("search"))
         
         data = {
             'films': films
@@ -58,9 +62,11 @@ class Search(ListView):
     context_object_name = "films"
     
     def get_queryset(self):
-        return Film.objects.select_related('data').filter(name__icontains=self.request.GET.get("search"))
+        return Film.objects.select_related('added_by').filter(name__icontains=self.request.GET.get("search"))
     
 
+@login_required(login_url="/login")
+@permission_required("can_add_film")
 def add_film(request):
     if request.method == "POST":
         form = FilmAddForm(request.POST)
@@ -74,4 +80,5 @@ def add_film(request):
     elif request.method == 'GET':
         form = FilmAddForm()
         return render(request, 'films/add_film.html', {'form': form})
+        
         
