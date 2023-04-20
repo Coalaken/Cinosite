@@ -135,5 +135,8 @@ pyrightconfig.json
 # pytype static type analyzer
 .pytype/
 
+# MEDIA
+media/
+
 # Cython debug symbols
 cython_debug/
