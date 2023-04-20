@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 
 from .models import Film, UserFilmRelation
+from .forms import FilmAddForm
 
 
 def home(request):
@@ -60,3 +61,17 @@ class Search(ListView):
         return Film.objects.select_related('data').filter(name__icontains=self.request.GET.get("search"))
     
 
+def add_film(request):
+    if request.method == "POST":
+        form = FilmAddForm(request.POST)
+        if form.is_valid():
+            form.save(commit=False)
+            form.added_by = request.user
+            form.save(commit=True)
+        else:
+            form = FilmAddForm()
+            return render(request, 'films/add_film.html', {'form': form})
+    elif request.method == 'GET':
+        form = FilmAddForm()
+        return render(request, 'films/add_film.html', {'form': form})
+        
