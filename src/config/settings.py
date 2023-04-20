@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     
     'crispy_forms',
     'crispy_bootstrap5',
+    'debug_toolbar',
     
     'films.apps.FilmsConfig',
     'users.apps.UsersConfig',
@@ -39,6 +40,8 @@ CRISPY_ALLOWED_TEMPLATES_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,6 +52,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 TEMPLATES = [
     {

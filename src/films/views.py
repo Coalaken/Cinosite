@@ -35,13 +35,13 @@ def home(request):
                         relation.save()
         else:
             print("film name not exist")
-        films = Film.objects.select_related('added_by').prefetch_related('viewers').all()
+        films = Film.objects.select_related('added_by').all()
         data = {
             'films': films
         }
         return render(request, 'films/home.html', data)
     else:
-        films = Film.objects.select_related('added_by').prefetch_related('viewers').all()
+        films = Film.objects.select_related('added_by').all()
         data = {
             'films': films
         }
@@ -81,9 +81,9 @@ def add_film(request):
         form = FilmAddForm()
         return render(request, 'films/add_film.html', {'form': form})
         
-        
+@login_required(login_url='/login') 
 def bookmarks(request):
-    films = Film.objects.filter(userfilmrelation__user=request.user,
+    films = Film.objects.select_related('added_by').filter(userfilmrelation__user=request.user,
                                 userfilmrelation__in_bookmarks=True)
     data = {
         'films': films
