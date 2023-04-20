@@ -1,15 +1,10 @@
 from django.contrib import admin
 
-from .models import Film, UserFilmRelation, FilmData
+from .models import Film, UserFilmRelation
 
 
 @admin.register(Film)
 class FilmAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(FilmData)
-class FilmDataAdmin(admin.ModelAdmin):
     pass
 
 

@@ -1,22 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-
-class FilmData(models.Model):
-    name = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='photos/')
-    video = models.FileField(upload_to='videos/')
-    
-    def __str__(self) -> str:
-        return self.name
     
     
 class Film(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    data = models.ForeignKey(FilmData, on_delete=models.SET_NULL, null=True)
     author = models.CharField(max_length=255)
-    
+    image = models.ImageField(upload_to='photos/', null=True)
+    video = models.FileField(upload_to='videos/', null=True)
     viewers = models.ManyToManyField(User, through="UserFilmRelation", 
                                      related_name="films")
     created_at = models.DateTimeField(auto_now_add=True)
