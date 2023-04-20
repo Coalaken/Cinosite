@@ -43,15 +43,14 @@ def home(request):
         return render(request, 'films/home.html', data)
     
 
-# def search(request):
-#     if request.method == 'POST':
-#         searched = request.POST.get('search')
-#         print(searched)
-#         films = Film.objects.filter(name__icontains=searched)
-#         data = {
-#             'films': films
-#         }
-#         return render(request, 'films/home.html', data)
+def search(request):    
+    if request.method == 'GET':
+        films = Film.objects.select_related('data').filter(name__icontains=request.GET.get("search"))
+        
+        data = {
+            'films': films
+        }
+        return render(request, 'films/home.html', data)
     
 class Search(ListView):
     template_name = 'films/home.html'
