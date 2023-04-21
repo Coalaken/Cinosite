@@ -12,4 +12,16 @@
           
         <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     </div>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" name="film-liked" id="film-liked" value="{{ film.name }}">
+                <span class="material-symbols-outlined">
+                    recommend
+                </span>
+            </button>
+
+        </form>
+
+    </div>
 {% endblock %}

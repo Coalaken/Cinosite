@@ -7,13 +7,17 @@ from django.shortcuts import get_object_or_404
 
 from .models import Film, UserFilmRelation
 from .forms import FilmAddForm
-from .services import change_bookmarks
+from .services import change_bookmarks, like
 
 
 @login_required(login_url="/login")
 def home(request):
     if request.method == 'POST':
-        change_bookmarks(request, Film, UserFilmRelation)
+        film_name = request.POST.get("film-name")
+
+        if film_name:
+            change_bookmarks(request, Film, UserFilmRelation, film_name)
+
 
     films = Film.objects.select_related('added_by').all()
     data = {
@@ -65,6 +69,10 @@ def bookmarks(request):
 
 @login_required(login_url="/login")
 def film_page(request, pk):
+    if request.method == 'POST':
+        film_liked = request.POST.get("film-liked")
+        if film_liked:
+            like(request, Film, UserFilmRelation, film_liked)
     film = get_object_or_404(Film, pk=pk)
     data = {
         'film': film
