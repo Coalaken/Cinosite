@@ -2,17 +2,31 @@
 
 {% block content %}
     <div class="container text-center" style="margin: 40px;">
-        <h2>{{ film.name }}</h2>
-        <video id="player" playsinline controls data-poster="/path/to/poster.jpg" max-width="400" max-height="500">
-            <source src="{{ film.video.url }}" type="video/mp4" />
-
-            <track kind="captions" label="English captions" src="/path/to/captions.vtt" srclang="en" default />
-        </video>
+        
 
           
-        <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     </div>
     <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <h2>{{ film.name }}</h2>
+                <video
+                id="my-video"
+                class="video-js"
+                controls
+                preload="auto"
+                width="730"
+                height="400"
+                poster="MY_VIDEO_POSTER.jpg"
+                data-setup="{}"
+              >
+                <source src="{{ film.get_stream_url }}" type="video/mp4" />
+                
+              </video>
+            
+              <script src="https://vjs.zencdn.net/8.0.4/video.min.js"></script>
+            </div>
+        </div>
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger" name="film-liked" id="film-liked" value="{{ film.name }}">
@@ -25,3 +39,16 @@
 
     </div>
 {% endblock %}
+
+
+
+
+               <!-- <video id="player" playsinline controls data-poster="/path/to/poster.jpg" max-width="400" max-height="500">
+                    <source src="{{ film.video.url }}" type="video/mp4" />
+
+                </video>
+                <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> -->
+
+
+
+

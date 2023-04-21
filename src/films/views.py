@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponseRedirect
+from django.http import StreamingHttpResponse
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
 from .models import Film, UserFilmRelation
 from .forms import FilmAddForm
-from .services import change_bookmarks, like
+from .services import change_bookmarks, like, open_file
 
 
 @login_required(login_url="/login")
@@ -68,7 +68,7 @@ def bookmarks(request):
 
 
 @login_required(login_url="/login")
-def film_page(request, pk):
+def film_page(request, pk: int):
     if request.method == 'POST':
         film_liked = request.POST.get("film-liked")
         if film_liked:
@@ -78,3 +78,15 @@ def film_page(request, pk):
         'film': film
     }
     return render(request, 'films/film_page.html', data)
+
+
+def get_streaming_video(request, pk: int):
+    file, status_code, content_length, content_range = open_file(request, Film, pk)
+    response = StreamingHttpResponse(file, status=status_code,
+                                     content_type='video/mp4')
+
+    response['Accept-Ranges'] = 'bytes'
+    response['Content-Length'] = str(content_length)
+    response['Cache-Control'] = 'no-cache'
+    response['Content-Range'] = content_range
+    return response

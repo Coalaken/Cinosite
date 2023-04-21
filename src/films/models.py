@@ -25,6 +25,10 @@ class Film(models.Model):
     def get_absolute_url(self):
         return reverse("film_page", kwargs={"pk": self.pk})
     
+    def get_stream_url(self):
+        return reverse("stream", kwargs={"pk": self.pk})
+    
+    
     
     
 class UserFilmRelation(models.Model):
