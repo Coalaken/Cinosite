@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.validators import FileExtensionValidator
     
     
 class Film(models.Model):
@@ -8,7 +9,9 @@ class Film(models.Model):
     description = models.TextField()
     author = models.CharField(max_length=255)
     image = models.ImageField(upload_to='photos/', null=True)
-    video = models.FileField(upload_to='videos/', null=True)
+    video = models.FileField(upload_to='videos/', null=True, validators=[
+        FileExtensionValidator(allowed_extensions=['mp4'])
+    ])
     viewers = models.ManyToManyField(User, through="UserFilmRelation", 
                                      related_name="films")
     created_at = models.DateTimeField(auto_now_add=True)
