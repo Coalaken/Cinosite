@@ -1,31 +1,37 @@
+import asyncio
+
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from pathlib import Path
 from typing import IO, Generator
+from .models import Film, UserFilmRelation
+from django.contrib.auth.models import User
 
 
-def change_bookmarks(request, model, relation_model, film_name):
-    # film_name = request.POST.get("film-name")
+# I did this because some of the arguments my function receives cannot be serializable.
+def change_bookmarks1(username, film_name):
+    # 
     if film_name:
+        user = User.objects.get(username=username)    
         try:
-            film = model.objects.get(name=film_name)
+            film = Film.objects.get(name=film_name)
         except Exception as e:
             print(e)
             pass
         else:
             if film:
                 try:
-                    relation = relation_model.objects.\
+                    relation = UserFilmRelation.objects.\
                         select_related('user').select_related('film').\
-                            get(film=film, user=request.user)
+                            get(film=film, user=user)
                     if relation.in_bookmarks == True:
                         relation.in_bookmarks = False
                     else:
                         relation.in_bookmarks = True
                     relation.save()
                 except Exception as e:
-                    relation = relation_model.objects.create(
-                        user=request.user,
+                    relation = UserFilmRelation.objects.create(
+                        user=user,
                         film=film,
                         in_bookmarks=False)
                     relation.save()
@@ -33,21 +39,51 @@ def change_bookmarks(request, model, relation_model, film_name):
         print("film name not exist")
         
         
-def like(request, model, relation_model, film_liked):
-    # film_liked = request.POST.get("film-liked")
+# def change_bookmarks(request, model, relation_model, film_name):
+#     # film_name = request.POST.get("film-name")
+#     if film_name:
+#         try:
+#             film = model.objects.get(name=film_name)
+#         except Exception as e:
+#             print(e)
+#             pass
+#         else:
+#             if film:
+#                 try:
+#                     relation = relation_model.objects.\
+#                         select_related('user').select_related('film').\
+#                             get(film=film, user=request.user)
+#                     if relation.in_bookmarks == True:
+#                         relation.in_bookmarks = False
+#                     else:
+#                         relation.in_bookmarks = True
+#                     relation.save()
+#                 except Exception as e:
+#                     relation = relation_model.objects.create(
+#                         user=request.user,
+#                         film=film,
+#                         in_bookmarks=False)
+#                     relation.save()
+#     else:
+#         print("film name not exist")
+        
+     
+def like1(username, film_liked):
+
     if film_liked:
+        user = User.objects.get(username=username)
         try:
-            film = model.objects.get(name=film_liked)
+            film = Film.objects.get(name=film_liked)
         except Exception as e:
             print(e)
             pass
         else:
             if film:
                 try:
-                    relation = relation_model.objects.select_related('user').\
+                    relation = UserFilmRelation.objects.select_related('user').\
                         select_related('film').get(
                             film=film,
-                            user=request.user
+                            user=user
                             )
                     if relation.like == True:
                         relation.like = False
@@ -55,13 +91,44 @@ def like(request, model, relation_model, film_liked):
                         relation.like = True
                     relation.save()
                 except Exception as e:
-                    relation = relation_model.objects.create(
-                        user=request.user,
+                    relation = UserFilmRelation.objects.create(
+                        user=user,
                         film=film,
                         in_bookmarks=False)
                     relation.save()
     else:
         print("film name not exist")
+        
+           
+# def like(request, model, relation_model, film_liked):
+#     # film_liked = request.POST.get("film-liked")
+#     if film_liked:
+#         try:
+#             film = model.objects.get(name=film_liked)
+#         except Exception as e:
+#             print(e)
+#             pass
+#         else:
+#             if film:
+#                 try:
+#                     relation = relation_model.objects.select_related('user').\
+#                         select_related('film').get(
+#                             film=film,
+#                             user=request.user
+#                             )
+#                     if relation.like == True:
+#                         relation.like = False
+#                     else:
+#                         relation.like = True
+#                     relation.save()
+#                 except Exception as e:
+#                     relation = relation_model.objects.create(
+#                         user=request.user,
+#                         film=film,
+#                         in_bookmarks=False)
+#                     relation.save()
+#     else:
+#         print("film name not exist")
 
 
 def ranged(

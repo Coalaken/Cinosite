@@ -7,8 +7,8 @@ from django.shortcuts import get_object_or_404
 
 from .models import Film, UserFilmRelation
 from .forms import FilmAddForm
-from .services import change_bookmarks, like, open_file
-
+from .services import open_file
+from .tasks import change_bookmarks_status1, change_like_status1
 
 @login_required(login_url="/login")
 def home(request):
@@ -16,7 +16,8 @@ def home(request):
         film_name = request.POST.get("film-name")
 
         if film_name:
-            change_bookmarks(request, Film, UserFilmRelation, film_name)
+            change_bookmarks_status1.delay(request.user.username, film_name)
+            # change_bookmarks_status.delay(request, Film, UserFilmRelation, film_name)
 
 
     films = Film.objects.select_related('added_by').all()
@@ -29,7 +30,9 @@ def home(request):
 @login_required(login_url="/login")
 def search(request):    
     if request.method == 'POST':
-        change_bookmarks(request, Film, UserFilmRelation)
+        film_name = request.POST.get("film-name")
+        if film_name:
+            change_bookmarks_status1.delay(request.user.username, film_name)
     films = Film.objects.select_related('added_by').\
         filter(name__icontains=request.GET.get("search"))
     data = {
@@ -58,7 +61,9 @@ def add_film(request):
 @login_required(login_url='/login') 
 def bookmarks(request):
     if request.method == 'POST':
-        change_bookmarks(request, Film, UserFilmRelation)
+        film_name = request.POST.get("film-name")
+        if film_name:
+            change_bookmarks_status1.delay(request.user.username, film_name)
     films = Film.objects.select_related('added_by').\
         filter(userfilmrelation__user=request.user, userfilmrelation__in_bookmarks=True)
     data = {
@@ -72,7 +77,7 @@ def film_page(request, pk: int):
     if request.method == 'POST':
         film_liked = request.POST.get("film-liked")
         if film_liked:
-            like(request, Film, UserFilmRelation, film_liked)
+            change_like_status1.delay(request.user.username, film_liked)
     film = get_object_or_404(Film, pk=pk)
     data = {
         'film': film
