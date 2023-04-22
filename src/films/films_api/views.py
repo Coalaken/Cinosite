@@ -6,7 +6,7 @@ from .serializer import FilmSerializer
 
 
 class FilmViewSet(ModelViewSet):
-    queryset = Film.objects.select_related('added_by').all().annotate(
+    queryset = Film.objects.all().annotate(
         annotated_likes=(
             Count(Case(When(userfilmrelation__like=True, then=1)))
         )

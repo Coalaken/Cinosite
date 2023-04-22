@@ -10,5 +10,5 @@ class FilmSerializer(serializers.ModelSerializer):
         model = Film
         fields = ('name', 'description',
                   'author', 'image',
-                  'video', 'viewers',
+                  'video',
                   'created_at', 'annotated_likes')
