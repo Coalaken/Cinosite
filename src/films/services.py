@@ -86,6 +86,7 @@ def ranged(
     if hasattr(file, 'close'):
         file.close()
 
+
 def open_file(request, model, video_pk):
     _video = get_object_or_404(model, pk=video_pk)
 
