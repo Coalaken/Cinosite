@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'debug_toolbar',
+    'rest_framework',
     # 'django_celery_results',
     
     'films.apps.FilmsConfig',
