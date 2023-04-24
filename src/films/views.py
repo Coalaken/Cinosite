@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView
 
-from .models import Film, UserFilmRelation
+from .models import Film, Category
 from .forms import FilmAddForm
 from .services import open_file
 from .tasks import change_bookmarks_status1, change_like_status1
@@ -22,7 +22,9 @@ def home(request):
 
 
     films = Film.objects.select_related('added_by').all()
+    catgories = Category.objects.all()
     data = {
+        'catgories': catgories,
         'films': films
     }
     return render(request, 'films/home.html', data)
@@ -36,7 +38,9 @@ def search(request):
             change_bookmarks_status1.delay(request.user.username, film_name)
     films = Film.objects.select_related('added_by').\
         filter(name__icontains=request.GET.get("search"))
+    catgories = Category.objects.all()
     data = {
+        'catgories': catgories,
         'films': films
     }
     return render(request, 'films/home.html', data)
@@ -63,7 +67,9 @@ def bookmarks(request):
             change_bookmarks_status1.delay(request.user.username, film_name)
     films = Film.objects.select_related('added_by').\
         filter(userfilmrelation__user=request.user, userfilmrelation__in_bookmarks=True)
+    catgories = Category.objects.all()
     data = {
+        'catgories': catgories,
         'films': films
     }
     return render(request, 'films/home.html', data)
@@ -76,8 +82,10 @@ def film_page(request, pk: int):
         if film_liked:
             change_like_status1.delay(request.user.username, film_liked)
     film = get_object_or_404(Film, pk=pk)
+    catgories = Category.objects.all()
     data = {
-        'film': film
+        'catgories': catgories,
+        'films': film
     }
     return render(request, 'films/film_page.html', data)
 
@@ -92,3 +100,13 @@ def get_streaming_video(request, pk: int):
     response['Cache-Control'] = 'no-cache'
     response['Content-Range'] = content_range
     return response
+
+
+def by_category(request, pk: int):
+    films = Film.objects.filter(category=pk)
+    catgories = Category.objects.all()
+    data = {
+        'catgories': catgories,
+        'films': films
+    }
+    return render(request, 'films/home.html', data)

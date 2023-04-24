@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.views.generic import UpdateView
+from django.contrib.auth.models import User
 
-from .forms import RegisterForm
+from .forms import RegisterForm, ChangeUserSettings
 
 
 
@@ -12,8 +14,6 @@ def sign_up(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save(commit=False)
-            form.added_by = request.user
             form.save(commit=True)
             return HttpResponseRedirect(reverse_lazy('home'))
         else:

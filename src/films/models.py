@@ -17,6 +17,8 @@ class Film(models.Model):
     
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
     
+    category = models.ForeignKey("Category", on_delete=models.SET_NULL, null=True)
+    
     def __str__(self) -> str:
         return self.name
     
@@ -55,3 +57,14 @@ class UserFilmRelation(models.Model):
         return f"{self.user}: {self.film.name} rate: {self.rate if self.rate else None} | \
             like: {self.DEFAULT_LIKE_TRUE if self.like else self.DEFAULT_LIKE_FALSE} | \
             in bookmarks: {self.DEFAULT_IN_BOOKMARKS if self.in_bookmarks else self.DEFAULT_NOT_IN_BOOKMARKS}"
+            
+            
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self) -> str:
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse("by_category", kwargs={"pk": self.pk})
+    

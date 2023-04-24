@@ -26,7 +26,16 @@
                         <a href="{% url 'home' %}" class="nav-link px-2 text-secondary">Home</a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link px-2 text-white">Features</a>
+                        <div class="dropdown" data-bs-theme="light">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonLight" data-bs-toggle="dropdown" aria-expanded="false">
+                              Categories
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonLight">
+                                {% for category in catgories %}
+                                    <li><a class="dropdown-item" href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                          </div>
                     </li>
                     {% if request.user.is_staff %}
                     <li>
@@ -38,7 +47,7 @@
                     </li>
                     {% if request.user.is_authenticated %}
                         <li>
-                            <a href="{% url 'user_profile' request.user.pk %}" class="nav-link px-2 text-white">
+                            <a href="{% url 'profile' request.user.pk %}" class="nav-link px-2 text-white">
                                 Profile
                                 <i class="bi bi-person-square">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
