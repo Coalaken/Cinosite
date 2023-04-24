@@ -9,9 +9,7 @@ class Film(models.Model):
     description = models.TextField()
     author = models.CharField(max_length=255)
     image = models.ImageField(upload_to='photos/', null=True)
-    video = models.FileField(upload_to='videos/', null=True, validators=[
-        FileExtensionValidator(allowed_extensions=['mp4'])
-    ])
+    video = models.FileField(upload_to='videos/', null=True)
     viewers = models.ManyToManyField(User, through="UserFilmRelation", 
                                      related_name="films")
     created_at = models.DateTimeField(auto_now_add=True)

@@ -22,3 +22,7 @@ def sign_up(request):
     elif request.method == 'GET':
         form = RegisterForm()
         return render(request, 'users/sign-up.html', {'form': form})
+    
+    
+def profile_page(request, pk):
+    return render(request, 'users/accout_page.html')

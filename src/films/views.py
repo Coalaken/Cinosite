@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from django.views.generic import CreateView
 
 from .models import Film, UserFilmRelation
 from .forms import FilmAddForm
@@ -41,21 +42,17 @@ def search(request):
     return render(request, 'films/home.html', data)
     
 
-@login_required(login_url="/login")
-@permission_required("films.can_add_film")
-def add_film(request):
-    if request.method == "POST":
-        form = FilmAddForm(request.POST)
-        if form.is_valid():
-            form.save(commit=False)
-            form.added_by = request.user
-            form.save(commit=True)
-        else:
-            form = FilmAddForm()
-            return render(request, 'films/add_film.html', {'form': form})
-    elif request.method == 'GET':
-        form = FilmAddForm()
-        return render(request, 'films/add_film.html', {'form': form})
+#############################################################
+# something wrong ... 
+class FilmCreateView(CreateView):
+    template_name = 'films/add_film.html'
+    form_class = FilmAddForm
+    
+    def form_valid(self, form):
+        form.cleaned_data['added_by'] = self.request.user
+        form.save()
+        return super().form_valid(form)
+#############################################################
         
         
 @login_required(login_url='/login') 

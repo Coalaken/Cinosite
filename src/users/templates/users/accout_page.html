@@ -1,0 +1,35 @@
+{% extends "layout/basic.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="profile-card" style="display: flex; margin-top: 50px">
+                <p>
+                    <img src="{% static 'users/images/default_user_image.jpg' %}" alt="Oups!" style="width: 200px; margin: 5px;">
+                </p>
+                <div style="display: block;">
+                    <h1 style="margin-left: 5px; margin-bottom: 0; color:rgb(46, 87, 78)">
+                        {{ request.user.username }}
+                    </h1>
+                    <div style="margin-left: 5px; color: red;">
+                        Prime status: Wihtout prime
+                    </div>
+                    <div class="links" style="margin: 5px;">
+                        <h4>
+                            <a href="{% url 'bookmarks' %}" style="text-decoration: none; color: black;">
+                                Your bookmarks here!
+                            </a>        
+                        </h4>
+
+                        <p style="margin-top: 50px;">
+                            You can change account settings 
+                            <a href="#">Here!</a>
+                        </p>
+                    </div>
+                </div>                
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
