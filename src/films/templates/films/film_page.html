@@ -15,7 +15,7 @@
                 poster="MY_VIDEO_POSTER.jpg"
                 data-setup="{}"
               >
-                <source src="{{ film.get_stream_url }}" type="video/mp4" />
+                <source src="{% url 'stream' film.pk %}" type="video/mp4" />
                 
               </video>
             

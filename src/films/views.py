@@ -5,6 +5,7 @@ from django.http import StreamingHttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView
+from django.db.models import Count, When, Case
 
 from .models import Film, Category
 from .forms import FilmAddForm
@@ -82,10 +83,11 @@ def film_page(request, pk: int):
         if film_liked:
             change_like_status1.delay(request.user.username, film_liked)
     film = get_object_or_404(Film, pk=pk)
-    catgories = Category.objects.all()
+    catgories = Category.objects.all().annotate(     
+    )
     data = {
+        'film': film,
         'catgories': catgories,
-        'films': film
     }
     return render(request, 'films/film_page.html', data)
 
