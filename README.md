@@ -1,6 +1,6 @@
 Это сайт для просмотра фильмов.
 
-Тут используется Django, bootstrap.
+Тут используется Django, bootstrap, Celery, DRF, Redis & Docker
 
 
 Реализовано:
