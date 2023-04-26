@@ -82,7 +82,11 @@ def film_page(request, pk: int):
         film_liked = request.POST.get("film-liked")
         if film_liked:
             change_like_status1.delay(request.user.username, film_liked)
-    film = get_object_or_404(Film, pk=pk)
+    film = Film.objects.filter(pk=pk).annotate(
+        annotated_likes=(
+            Count(Case(When(userfilmrelation__like=True, then=1)))
+        )
+    ).first()
     catgories = Category.objects.all().annotate(     
     )
     data = {

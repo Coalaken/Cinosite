@@ -22,6 +22,9 @@
               <script src="https://vjs.zencdn.net/8.0.4/video.min.js"></script>
             </div>
         </div>
+        <div>
+            {{ film.annotated_likes }}
+        </div>
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger" name="film-liked" id="film-liked" value="{{ film.name }}">
