@@ -192,19 +192,34 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'main_format',
         },
-
-        'file': {
+        
+        # logging for django
+        'django_file': {
             'class': 'logging.FileHandler',
             'formatter': 'json_format',
-            'filename': 'information.log'
+            'filename': 'django_info.log'
         },
+        
+        # logging for celery
+        'celery_file': {
+            'class': 'logging.FileHandler',
+            'formatter': 'json_format',
+            'filename': 'celery_info.log'            
+        }
     },
     
     # объект для логгирования сообщений
     'loggers': {
-        'main': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG' if settings.DEBUG else 'INFO',            
+        'django': {
+            'handlers': ['django_file', 'console'],
+            'level': 'DEBUG' if settings.DEBUG else 'INFO',  
+            'propagate': True,          
+        }, 
+        
+        'celery': {
+            'handlers': ['celery_file', 'console'],
+            'level': 'DEBUG' if settings.DEBUG else 'INFO',  
+            'propagate': True,          
         }, 
     },
     

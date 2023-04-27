@@ -16,7 +16,7 @@ from .tasks import change_bookmarks_status1, change_like_status1
 
 
 # logger name from settings 
-logger = logging.getLogger('main')
+logger = logging.getLogger('django')
 
 
 
