@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required, permission_required
@@ -12,14 +14,23 @@ from .forms import FilmAddForm
 from .services import open_file
 from .tasks import change_bookmarks_status1, change_like_status1
 
+
+# logger name from settings 
+logger = logging.getLogger('main')
+
+
+
 @login_required(login_url="/login")
 def home(request):
     if request.method == 'POST':
         film_name = request.POST.get("film-name")
 
         if film_name:
-            change_bookmarks_status1.delay(request.user.username, film_name)
+            try:
+                change_bookmarks_status1.delay(request.user.username, film_name)
             # change_bookmarks_status.delay(request, Film, UserFilmRelation, film_name)
+            except Exception as e:
+                logger.exception(e)
 
 
     films = Film.objects.select_related('added_by').all()

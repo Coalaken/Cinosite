@@ -1,5 +1,11 @@
 from pathlib import Path
 import os
+from django.urls import reverse_lazy
+# import logging
+from django.conf import settings
+# from pythonjsonlogger.jsonlogger import JsonFormatter
+from .logging_formatters import CustomJsonFormatter
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -90,7 +96,7 @@ DATABASES = {
         'USER': 'matvey',
         'PASSWORD': '1234',
         'HOST': '127.0.0.1', 
-        'PORT': '5432',
+        'PORT': '6432',
     }
 }
 
@@ -141,7 +147,7 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-from django.urls import reverse_lazy
+
 
 
 LOGIN_REDIRECT_URL = reverse_lazy('home')
@@ -149,6 +155,7 @@ LOGOUT_REDIRECT_URL = '/login'
 
 
 ################## CELERY ##################
+
 REDIS_HOST = '0.0.0.0'
 REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
@@ -157,3 +164,49 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZEAR ='json'
+
+################## LOGGING ##################
+
+# any types of formatters you can fin on oficcial logging page... +_+ 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    
+    'formatters': {
+        'main_format': {
+            # logging message formatter
+            'format': "[{levelname} - {asctime} - {module} - {message}]",
+            'style': "{",
+        },
+        
+        'json_format': {
+            # () - значит что мы принимаем class 
+            '()': CustomJsonFormatter,
+        }
+    },
+    
+    # обработчик логов
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'main_format',
+        },
+
+        'file': {
+            'class': 'logging.FileHandler',
+            'formatter': 'json_format',
+            'filename': 'information.log'
+        },
+    },
+    
+    # объект для логгирования сообщений
+    'loggers': {
+        'main': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG' if settings.DEBUG else 'INFO',            
+        }, 
+    },
+    
+}
+
