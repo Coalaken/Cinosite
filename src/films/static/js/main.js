@@ -2,10 +2,10 @@ $(document).ready(function () {
 
     const csrf = $("input[name=csrfmiddlewaretoken]").val();
 
-    const button = $(".btn");
+    const button = $(".bookmarks-button");
 
-    // let like_button = document.querySelector(".btn")
-
+    const likeButton = $(".like-button")
+    
     button.click(function() {
         $.ajax({
             url: "",
@@ -23,22 +23,30 @@ $(document).ready(function () {
             }
         });
     });
-    
 
-    
-    // button.click(function() {
-    //     $.ajax({
-    //         url: "/SoGood/films/3/", 
-    //         type: "post",
-    //         data: {
-    //             csrfmiddlewaretoken: csrf,
-    //             like_field: $(this).val()
-    //         },
-    //         success: function() {
-    //             return
-    //         }
-    //     })
-    // })
+    likeButton.click(function() {
+        $.ajax({
+            url: "",
+            type: "post",
+            data: {
+                csrfmiddlewaretoken: csrf,
+                liked_film: $(this).val()
+            },
+            success: function() {
+                console.log('success')
+                if ($("btn-danger")) {
+                    likeButton.removeClass("btn-danger").addClass('btn-success')
+                } 
+                // if ($('btn-success')) {
+                //     likeButton.removeClass("btn-success").addClass('btn-danger')
+                // } 
+                
+            },
+            error: function() {
+                console.log("OSOme Error")
+            }
+        })
+    })
     
 });
 

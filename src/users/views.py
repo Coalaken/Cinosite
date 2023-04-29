@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
 from django.contrib.auth.models import User
+from django.views.generic import View
+
 
 from .forms import RegisterForm, ChangeUserSettings
 
@@ -10,7 +12,7 @@ from .forms import RegisterForm, ChangeUserSettings
 
 def sign_up(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse_lazy('home'))
+        return HttpResponseRedirect(reverse_lazy('home'))    
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():

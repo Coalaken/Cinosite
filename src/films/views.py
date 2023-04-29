@@ -112,7 +112,7 @@ def bookmarks(request):
 def film_page(request, pk: int):
     if request.method == 'POST' and is_ajax(request):
         try:
-            film_liked = request.POST.get("button_value")
+            film_liked = request.POST.get("liked_film")
             if film_liked:
                 change_like_status1.delay(request.user.username, film_liked)
         except Exception as e:
