@@ -19,10 +19,16 @@ from .tasks import change_bookmarks_status1, change_like_status1
 logger = logging.getLogger('django')
 
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
 
 @login_required(login_url="/login")
 def home(request):
+       
     if request.method == 'POST':
+        value = request.POST.get('button_value')      
+        print(value)
         film_name = request.POST.get("film-name")
 
         if film_name:
@@ -47,9 +53,17 @@ def search(request):
     if request.method == 'POST':
         film_name = request.POST.get("film-name")
         if film_name:
-            change_bookmarks_status1.delay(request.user.username, film_name)
+            try:
+                change_bookmarks_status1.delay(request.user.username, film_name)
+            except Exception as e:
+                logger.exception(e)
+    try:
+        search_name = request.GET.get("search")
+    except Exception as e:
+        logger.exception(e)
+        
     films = Film.objects.select_related('added_by').\
-        filter(name__icontains=request.GET.get("search"))
+        filter(name__icontains=search_name)
     catgories = Category.objects.all()
     data = {
         'catgories': catgories,
@@ -74,9 +88,17 @@ class FilmCreateView(CreateView):
 @login_required(login_url='/login') 
 def bookmarks(request):
     if request.method == 'POST':
-        film_name = request.POST.get("film-name")
+        try:
+            film_name = request.POST.get("film-name")
+        except Exception as e:
+            logger.exception(e)
+            
         if film_name:
-            change_bookmarks_status1.delay(request.user.username, film_name)
+            try:
+                change_bookmarks_status1.delay(request.user.username, film_name)
+            except Exception as e:
+                logger.exception(e)
+            
     films = Film.objects.select_related('added_by').\
         filter(userfilmrelation__user=request.user, userfilmrelation__in_bookmarks=True)
     catgories = Category.objects.all()
@@ -90,9 +112,13 @@ def bookmarks(request):
 @login_required(login_url="/login")
 def film_page(request, pk: int):
     if request.method == 'POST':
-        film_liked = request.POST.get("film-liked")
-        if film_liked:
-            change_like_status1.delay(request.user.username, film_liked)
+        try:
+            film_liked = request.POST.get("film-liked")
+            if film_liked:
+                change_like_status1.delay(request.user.username, film_liked)
+        except Exception as e:
+            logger.exception(e)
+            
     film = Film.objects.filter(pk=pk).annotate(
         annotated_likes=(
             Count(Case(When(userfilmrelation__like=True, then=1)))
@@ -120,7 +146,10 @@ def get_streaming_video(request, pk: int):
 
 
 def by_category(request, pk: int):
-    films = Film.objects.filter(category=pk)
+    try:
+        films = Film.objects.filter(category=pk)
+    except Exception as e:
+        logger.exception(e)
     catgories = Category.objects.all()
     data = {
         'catgories': catgories,

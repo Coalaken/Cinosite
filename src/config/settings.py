@@ -1,9 +1,7 @@
 from pathlib import Path
 import os
+
 from django.urls import reverse_lazy
-# import logging
-from django.conf import settings
-# from pythonjsonlogger.jsonlogger import JsonFormatter
 from .logging_formatters import CustomJsonFormatter
 
 
@@ -96,7 +94,9 @@ DATABASES = {
         'USER': 'matvey',
         'PASSWORD': '1234',
         'HOST': '127.0.0.1', 
-        'PORT': '6432',
+        'PORT': '5432',
+        # 'PORT': '6432',
+
     }
 }
 
@@ -212,13 +212,13 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['django_file', 'console'],
-            'level': 'DEBUG' if settings.DEBUG else 'INFO',  
+            'level': 'INFO',  
             'propagate': True,          
         }, 
         
         'celery': {
             'handlers': ['celery_file', 'console'],
-            'level': 'DEBUG' if settings.DEBUG else 'INFO',  
+            'level': 'INFO',  
             'propagate': True,          
         }, 
     },
