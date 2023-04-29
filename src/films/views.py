@@ -26,10 +26,9 @@ def is_ajax(request):
 @login_required(login_url="/login")
 def home(request):
        
-    if request.method == 'POST':
-        value = request.POST.get('button_value')      
-        print(value)
-        film_name = request.POST.get("film-name")
+    if request.method == 'POST' and is_ajax(request):
+        film_name = request.POST.get('button_value')      
+
 
         if film_name:
             try:
@@ -50,8 +49,8 @@ def home(request):
     
 @login_required(login_url="/login")
 def search(request):    
-    if request.method == 'POST':
-        film_name = request.POST.get("film-name")
+    if request.method == 'POST' and is_ajax(request):
+        film_name = request.POST.get("button_value")
         if film_name:
             try:
                 change_bookmarks_status1.delay(request.user.username, film_name)
@@ -87,9 +86,9 @@ class FilmCreateView(CreateView):
         
 @login_required(login_url='/login') 
 def bookmarks(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and is_ajax(request):
         try:
-            film_name = request.POST.get("film-name")
+            film_name = request.POST.get("button_value")
         except Exception as e:
             logger.exception(e)
             
@@ -111,9 +110,9 @@ def bookmarks(request):
 
 @login_required(login_url="/login")
 def film_page(request, pk: int):
-    if request.method == 'POST':
+    if request.method == 'POST' and is_ajax(request):
         try:
-            film_liked = request.POST.get("film-liked")
+            film_liked = request.POST.get("button_value")
             if film_liked:
                 change_like_status1.delay(request.user.username, film_liked)
         except Exception as e:

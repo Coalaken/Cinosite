@@ -11,8 +11,11 @@
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://vjs.zencdn.net/8.0.4/video-js.css" rel="stylesheet" />
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    {% block customscripts %}
     <script defer src="{% static 'js/main.js' %}"></script>
+    {% endblock %}
     <script defer src="{% static 'js/jquery-3.6.4.js' %}"></script>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
 

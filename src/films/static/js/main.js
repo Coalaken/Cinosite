@@ -4,6 +4,8 @@ $(document).ready(function () {
 
     const button = $(".btn");
 
+    // let like_button = document.querySelector(".btn")
+
     button.click(function() {
         $.ajax({
             url: "",
@@ -13,9 +15,31 @@ $(document).ready(function () {
                 button_value: $(this).val()
             },
             success: function (response) {
+                console.log("Success")
+            },
+            error: { function(response) {
+                    console.log("SomeError")
+                }
             }
-        })
+        });
     });
+    
+
+    
+    // button.click(function() {
+    //     $.ajax({
+    //         url: "/SoGood/films/3/", 
+    //         type: "post",
+    //         data: {
+    //             csrfmiddlewaretoken: csrf,
+    //             like_field: $(this).val()
+    //         },
+    //         success: function() {
+    //             return
+    //         }
+    //     })
+    // })
+    
 });
 
 
