@@ -14,7 +14,7 @@ ___
 
 
 
-__**Implemented:**__
+__Implemented:__
 
 1. The main page has been created.
 2. The admin panel is configured.
@@ -34,7 +34,12 @@ __**Implemented:**__
 15. Profile Page
 16. Output of the total number of likes
 
-__**In the plans:**__
+__In the plans:__
 1. Implement a paid subscription system
 2. Implement the output of the list of popular movies
 3. SocialAuth
+
+___
+
+
+![alt text]()
