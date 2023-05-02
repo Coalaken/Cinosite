@@ -1,11 +1,8 @@
 import logging
 
 from django.shortcuts import render
-from django.views.generic import ListView
-from django.contrib.auth.decorators import login_required, permission_required
-from django.http import StreamingHttpResponse, HttpResponseRedirect
-from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import StreamingHttpResponse
 from django.views.generic import CreateView
 from django.db.models import Count, When, Case
 
@@ -50,19 +47,17 @@ def home(request):
 @login_required(login_url="/login")
 def search(request):    
     if request.method == 'POST' and is_ajax(request):
-        film_name = request.POST.get("button_value")
-        if film_name:
-            try:
-                change_bookmarks_status1.delay(request.user.username, film_name)
-            except Exception as e:
+        try:
+            film_name = request.POST.get("button_value")
+            change_bookmarks_status1.delay(request.user.username, film_name)
+        except Exception as e:
                 logger.exception(e)
     try:
-        search_name = request.GET.get("search")
+        search_name = request.GET.get("search")      
+        films = Film.objects.select_related('added_by').\
+        filter(name__icontains=search_name)
     except Exception as e:
         logger.exception(e)
-        
-    films = Film.objects.select_related('added_by').\
-        filter(name__icontains=search_name)
     catgories = Category.objects.all()
     data = {
         'catgories': catgories,
@@ -71,17 +66,10 @@ def search(request):
     return render(request, 'films/home.html', data)
     
 
-#############################################################
-# something wrong ... 
 class FilmCreateView(CreateView):
     template_name = 'films/add_film.html'
     form_class = FilmAddForm
-    
-    def form_valid(self, form):
-        form.cleaned_data['added_by'] = self.request.user
-        form.save()
-        return super().form_valid(form)
-#############################################################
+
         
         
 @login_required(login_url='/login') 
@@ -89,13 +77,8 @@ def bookmarks(request):
     if request.method == 'POST' and is_ajax(request):
         try:
             film_name = request.POST.get("button_value")
+            change_bookmarks_status1.delay(request.user.username, film_name)
         except Exception as e:
-            logger.exception(e)
-            
-        if film_name:
-            try:
-                change_bookmarks_status1.delay(request.user.username, film_name)
-            except Exception as e:
                 logger.exception(e)
             
     films = Film.objects.select_related('added_by').\
@@ -117,7 +100,7 @@ def film_page(request, pk: int):
                 change_like_status1.delay(request.user.username, film_liked)
         except Exception as e:
             logger.exception(e)
-            
+           
     film = Film.objects.filter(pk=pk).annotate(
         annotated_likes=(
             Count(Case(When(userfilmrelation__like=True, then=1)))

@@ -1,11 +1,23 @@
 $(document).ready(function () {
-
+    // let likeBut = document.getElementsByClassName("like-button")
+    
     const csrf = $("input[name=csrfmiddlewaretoken]").val();
 
     const button = $(".bookmarks-button");
 
     const likeButton = $(".like-button")
-    
+
+    const btn = document.getElementById("filmliked")
+    const index = 0
+
+    function buttonColor () {
+        if (btn.style.backgroundColor === 'grey') {
+            btn.style.backgroundColor = 'red'
+        } else {
+            btn.style.backgroundColor = 'grey'
+        }
+    }
+
     button.click(function() {
         $.ajax({
             url: "",
@@ -33,56 +45,22 @@ $(document).ready(function () {
                 liked_film: $(this).val()
             },
             success: function() {
-                console.log('success')
-                if ($("btn-danger")) {
-                    likeButton.removeClass("btn-danger").addClass('btn-success')
-                } 
-                // if ($('btn-success')) {
-                //     likeButton.removeClass("btn-success").addClass('btn-danger')
-                // } 
-                
+                console.log("syu")
+
+                btn.onclick =  buttonColor
+               
             },
             error: function() {
                 console.log("OSOme Error")
             }
-        })
-    })
+        });
+    });
+
+    
+
     
 });
 
 
-
-// $(document).ready(function () {
-
-//     const csrf = $("input[name=csrfmiddlewaretoken]").val();
-
-//     $(".btn").click(function () {
-//         $.ajax({
-//             url: "",
-//             type: "GET",
-//             data: {
-//                 button_name: $(this).text()
-//             },
-//             success: (response) => {
-//                 $(".btn").text(response.seconds)
-//                 $("#seconds").append("<li>" + response.seconds + '</li>')
-//             }
-//         });
-//     }); 
-
-//     $("#seconds").on('click', 'li', () => {
-//         $.ajax({
-//             url:'',
-//             type: 'post',
-//             data: {
-//                 text: $(this).text(),
-//                 csrfmiddlewaretoken: csrf
-//             },
-//             success: (response) => {
-//                 $("#right").append('<li>' + response.data + '</li>')
-//             }
-//         })
-//     });
-// });      
         
 

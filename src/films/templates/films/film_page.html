@@ -1,6 +1,16 @@
 {% extends "layout/basic.html" %}
 {% load static %}
 
+
+{% block style %}
+<style>
+    .like-button {
+        border-radius: 5px;
+        background-color: grey;
+    }
+</style>
+
+{% endblock %}
 {% block content %}
     <div class="container">
         <div class="row">
@@ -28,7 +38,7 @@
         </div> -->
         <!-- <form method="post"> -->
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger like-button" name="film-liked" id="film-liked" value="{{ film.name }}">
+            <button type="submit" class="like-button" name="filmliked" id="filmliked" value="{{ film.name }}" >
                 <span class="material-symbols-outlined">
                     recommend
                 </span>
