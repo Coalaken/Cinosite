@@ -11,8 +11,7 @@ from .forms import FilmAddForm
 from .services import open_file
 from .tasks import change_bookmarks_status1, change_like_status1
 
-
-# logger name from settings 
+# logger name from settings
 logger = logging.getLogger('django')
 
 
@@ -22,10 +21,8 @@ def is_ajax(request):
 
 @login_required(login_url="/login")
 def home(request):
-       
     if request.method == 'POST' and is_ajax(request):
-        film_name = request.POST.get('button_value')      
-
+        film_name = request.POST.get('button_value')
 
         if film_name:
             try:
@@ -34,7 +31,6 @@ def home(request):
             except Exception as e:
                 logger.exception(e)
 
-
     films = Film.objects.select_related('added_by').all()
     catgories = Category.objects.all()
     data = {
@@ -42,20 +38,20 @@ def home(request):
         'films': films
     }
     return render(request, 'films/home.html', data)
-    
-    
+
+
 @login_required(login_url="/login")
-def search(request):    
+def search(request):
     if request.method == 'POST' and is_ajax(request):
         try:
             film_name = request.POST.get("button_value")
             change_bookmarks_status1.delay(request.user.username, film_name)
         except Exception as e:
-                logger.exception(e)
+            logger.exception(e)
     try:
-        search_name = request.GET.get("search")      
-        films = Film.objects.select_related('added_by').\
-        filter(name__icontains=search_name)
+        search_name = request.GET.get("search")
+        films = Film.objects.select_related('added_by'). \
+            filter(name__icontains=search_name)
     except Exception as e:
         logger.exception(e)
     catgories = Category.objects.all()
@@ -64,24 +60,23 @@ def search(request):
         'films': films
     }
     return render(request, 'films/home.html', data)
-    
+
 
 class FilmCreateView(CreateView):
     template_name = 'films/add_film.html'
     form_class = FilmAddForm
 
-        
-        
-@login_required(login_url='/login') 
+
+@login_required(login_url='/login')
 def bookmarks(request):
     if request.method == 'POST' and is_ajax(request):
         try:
             film_name = request.POST.get("button_value")
             change_bookmarks_status1.delay(request.user.username, film_name)
         except Exception as e:
-                logger.exception(e)
-            
-    films = Film.objects.select_related('added_by').\
+            logger.exception(e)
+
+    films = Film.objects.select_related('added_by'). \
         filter(userfilmrelation__user=request.user, userfilmrelation__in_bookmarks=True)
     catgories = Category.objects.all()
     data = {
@@ -100,13 +95,13 @@ def film_page(request, pk: int):
                 change_like_status1.delay(request.user.username, film_liked)
         except Exception as e:
             logger.exception(e)
-           
+
     film = Film.objects.filter(pk=pk).annotate(
         annotated_likes=(
             Count(Case(When(userfilmrelation__like=True, then=1)))
         )
     ).first()
-    catgories = Category.objects.all().annotate(     
+    catgories = Category.objects.all().annotate(
     )
     data = {
         'film': film,

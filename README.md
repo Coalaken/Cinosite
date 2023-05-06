@@ -9,7 +9,7 @@ ___
   #### PostgreSQL, 
   #### Redis(Docker),
   #### A Little JS with JQuery,
-  #### I tried to do CI/CD with GitHub Actions
+  #### I tried to do CI with GitHub Actions
 ___
 
 
@@ -42,4 +42,4 @@ __In the plans:__
 ___
 
 
-![alt text]()
+![alt text]("Logo Title Text")
