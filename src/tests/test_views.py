@@ -2,7 +2,7 @@ from django.urls import reverse, resolve
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from .. import views
+from films import views
 
 
 class ViewsTestCase(TestCase):
